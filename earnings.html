@@ -99,6 +99,8 @@
   .nav-item{color:#B3AF9F;text-align:center;font-size:21px;cursor:pointer;transition:.3s;}
   .nav-item.active{color:var(--primary);transform:translateY(-3px);}
   .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;}
+  .nav-dot{position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--primary);opacity:0;transition:.3s;}
+  .nav-item.active .nav-dot{opacity:1;bottom:-9px;}
 
   /* --- Desktop Breakpoint Fixes --- */
   @media (min-width: 768px) {
@@ -127,7 +129,7 @@
   <div class="desktop-nav">
     <a href="creator.html" class="d-nav-item">Gigs</a>
     <a href="stats.html" class="d-nav-item">Stats</a>
-    <div class="d-nav-item active">Earnings</div>
+    <a href="earnings.html" class="d-nav-item active">Earnings</a>
   </div>
 </div>
 
@@ -241,7 +243,7 @@
   <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
   <a href="creator.html" class="nav-item"><i class="fa-solid fa-briefcase"></i><span>Gigs</span></a>
   <a href="stats.html" class="nav-item"><i class="fa-solid fa-chart-simple"></i><span>Stats</span></a>
-  <a href="#" class="nav-item active"><i class="fa-solid fa-wallet"></i><span>Earnings</span><div class="nav-dot"></div></a>
+  <a href="earnings.html" class="nav-item active"><i class="fa-solid fa-wallet"></i><span>Earnings</span><div class="nav-dot"></div></a>
 </div>
 
 <div id="toast"><i class="fa-solid fa-building-columns"></i><span id="toastMsg"></span></div>
