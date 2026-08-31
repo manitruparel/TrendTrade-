@@ -14,10 +14,11 @@
     --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);padding-bottom:100px;overflow-x:hidden;}
+  
+  html { background: var(--bg); }
+  body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 100px; overflow-x: hidden; position: relative; }
   a{color:inherit;}
 
-  /* --- Header & Desktop Nav --- */
   .app-header{
     background:rgba(253,251,243,0.95);backdrop-filter:blur(14px);padding:18px 6%;
     position:sticky;top:0;z-index:100; border-bottom:1px solid var(--line);
@@ -32,7 +33,7 @@
 
   .dashboard-header{
     background:var(--primary);color:white;padding:44px 6% 74px;border-radius:0 0 36px 36px;
-    text-align:center;position:relative;overflow:hidden;
+    text-align:center;position:relative;overflow:hidden; z-index: 10;
   }
   .dashboard-header::before{
     content:'';position:absolute;inset:0;
@@ -79,9 +80,10 @@
   .gig-feed{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-bottom:40px;}
 
   .gig-card{
-    border-radius:22px;border:1px solid var(--line);background:var(--surface);
+    border-radius:22px;border:1px solid var(--line);
+    background:var(--surface);
     box-shadow:0 4px 14px rgba(25,25,25,0.03);transition:box-shadow .35s;overflow:hidden;
-    position:relative;will-change:transform;
+    position:relative;will-change:transform; display:flex; flex-direction:column;
   }
   .gig-card:hover{box-shadow:0 22px 40px -14px rgba(25,25,25,0.14);}
   .gig-img{height:150px;background-size:cover;background-position:center;position:relative;transition:transform .5s ease;}
@@ -92,19 +94,26 @@
     transition:transform .5s ease;
   }
   .gig-card:hover .price-tag{transform:scale(0.94);}
-  .gig-content{padding:20px;border-top:1.5px dashed var(--line);position:relative;}
+  .gig-content{padding:20px;border-top:1.5px dashed var(--line);position:relative; display:flex; flex-direction:column; flex:1;}
   .gig-content::before,.gig-content::after{content:'';position:absolute;top:-11px;width:22px;height:22px;background:var(--bg);border-radius:50%;}
   .gig-content::before{left:-11px;}
   .gig-content::after{right:-11px;}
   .gig-content h3{font-size:17px;margin-bottom:6px;font-weight:700;}
-  .gig-content p{color:var(--ink-muted);font-size:13.5px;margin-bottom:16px;line-height:1.5;}
+  .gig-content p{color:var(--ink-muted);font-size:13.5px;margin-bottom:16px;line-height:1.5; flex:1;}
+  
+  /* Updated Button Area for Negotiate Feature */
+  .card-actions { display: flex; gap: 10px; width: 100%; margin-top: auto; }
   .apply-btn{
-    background:var(--ink);color:white;padding:12px;border-radius:100px;font-weight:700;text-align:center;
-    display:block;text-decoration:none;font-size:14px;transition:.3s;border:none;width:100%;cursor:pointer;font-family:var(--font-body);
+    flex: 1; background:var(--ink);color:white;padding:12px;border-radius:100px;font-weight:700;text-align:center;
+    display:block;text-decoration:none;font-size:14px;transition:.3s;border:none;cursor:pointer;font-family:var(--font-body);
   }
-  .apply-btn:hover{background:var(--primary);}
+  .apply-btn:hover{background:var(--primary); transform:translateY(-2px);}
+  .chat-btn {
+    background: transparent; border: 1.5px solid var(--line); color: var(--ink); border-radius: 100px;
+    padding: 0 16px; font-size: 14px; font-weight: 700; cursor: pointer; transition: .3s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--font-body);
+  }
+  .chat-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(53,56,205,0.05); transform: translateY(-2px); }
 
-  /* --- Mobile Bottom Nav --- */
   .bottom-nav{
     position:fixed;bottom:0;left:0;width:100%;background:rgba(253,251,243,0.95);backdrop-filter:blur(16px);
     border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:14px 0 22px;z-index:1000;
@@ -113,10 +122,9 @@
   .nav-item.active{color:var(--primary);transform:translateY(-3px);}
   .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;}
 
-  /* --- Desktop Breakpoint Fixes --- */
   @media (min-width: 768px) {
-    .bottom-nav { display: none; } /* Hides mobile nav on PC */
-    .desktop-nav { display: flex; } /* Shows top right nav on PC */
+    .bottom-nav { display: none; } 
+    .desktop-nav { display: flex; } 
     body { padding-bottom: 60px; }
   }
 
@@ -169,7 +177,10 @@
       <div class="gig-content">
         <h3>Muse Cafe, Sindhu Bhavan Road</h3>
         <p>Looking for a local food vlogger to review our new weekend brunch menu and aesthetic interiors.</p>
-        <button class="apply-btn" onclick="triggerApply('Muse Cafe')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Muse Cafe')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Muse Cafe')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
 
@@ -180,7 +191,10 @@
       <div class="gig-content">
         <h3>Zen Cafe, CEPT Campus</h3>
         <p>Seeking an aesthetic lifestyle creator for a quick reel on our manual brew techniques and campus vibes.</p>
-        <button class="apply-btn" onclick="triggerApply('Zen Cafe')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Zen Cafe')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Zen Cafe')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
 
@@ -191,7 +205,10 @@
       <div class="gig-content">
         <h3>Cult.fit, Prahlad Nagar</h3>
         <p>Need a fitness creator for a 3-part reel series showcasing our new functional training equipment.</p>
-        <button class="apply-btn" onclick="triggerApply('Cult.fit')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Cult.fit')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Cult.fit')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
 
@@ -202,7 +219,10 @@
       <div class="gig-content">
         <h3>Grover's Tandoori Shala</h3>
         <p>Need a local creator to showcase our authentic North Indian dinner spread for a family-focused audience.</p>
-        <button class="apply-btn" onclick="triggerApply('Grover\'s Tandoori Shala')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Grover\'s Tandoori Shala')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Grover\'s Tandoori Shala')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
 
@@ -213,7 +233,10 @@
       <div class="gig-content">
         <h3>Makeba The Lounge, Vastrapur</h3>
         <p>Quick 30-second aesthetic reel covering our mocktail menu with the Vastrapur lake view at sunset.</p>
-        <button class="apply-btn" onclick="triggerApply('Makeba The Lounge')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Makeba The Lounge')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Makeba The Lounge')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
 
@@ -224,7 +247,66 @@
       <div class="gig-content">
         <h3>The Project Cafe, Ambawadi</h3>
         <p>Looking for a creative vlogger to highlight our art gallery space and seasonal desserts.</p>
-        <button class="apply-btn" onclick="triggerApply('The Project Cafe')">Apply Now</button>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('The Project Cafe')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('The Project Cafe')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;4,500</div>
+      </div>
+      <div class="gig-content">
+        <h3>Manek Chowk Street Food</h3>
+        <p>Late night food vlogger required to cover 5 iconic street food stalls for a fast-paced reel.</p>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Manek Chowk Group')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Manek Chowk Group')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;3,000</div>
+      </div>
+      <div class="gig-content">
+        <h3>Mocha, Bodakdev</h3>
+        <p>We need a casual lifestyle review of our new outdoor seating area and signature desserts.</p>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Mocha Bodakdev')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Mocha Bodakdev')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;6,000</div>
+      </div>
+      <div class="gig-content">
+        <h3>Brikoven, Sindhu Bhavan</h3>
+        <p>High-energy food creator needed to showcase our authentic Neapolitan wood-fired pizza process.</p>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('Brikoven')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('Brikoven')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1511116131464-9b9776f3069c?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;7,500</div>
+      </div>
+      <div class="gig-content">
+        <h3>TopSpin Club, Bopal</h3>
+        <p>Looking for an active/sports creator to highlight our new premium indoor badminton courts.</p>
+        <div class="card-actions">
+          <button class="apply-btn" onclick="triggerApply('TopSpin Club')">Apply Now</button>
+          <button class="chat-btn" onclick="triggerChat('TopSpin Club')"><i class="fa-regular fa-comment-dots"></i> Negotiate</button>
+        </div>
       </div>
     </div>
     
@@ -238,7 +320,7 @@
   <div class="nav-item"><i class="fa-solid fa-wallet"></i><span>Earnings</span></div>
 </div>
 
-<div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+<div id="toast"><i class="fa-solid fa-circle-check" id="toastIcon"></i><span id="toastMsg"></span></div>
 
 <script>
   const slider = document.getElementById("followerSlider");
@@ -286,12 +368,26 @@
   let toastTimer;
   function triggerApply(shop){
     const toast = document.getElementById('toast');
+    document.getElementById('toastIcon').className = "fa-solid fa-circle-check";
+    document.getElementById('toastIcon').style.color = "var(--mint)";
     document.getElementById('toastMsg').innerHTML = `<b>Application sent</b> to ${shop} &middot; they'll review your Report Card`;
+    showToast(toast);
+  }
+
+  function triggerChat(shop){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastIcon').className = "fa-regular fa-paper-plane";
+    document.getElementById('toastIcon').style.color = "var(--primary)";
+    document.getElementById('toastMsg').innerHTML = `<b>Message request sent</b> to ${shop}`;
+    showToast(toast);
+  }
+
+  function showToast(toast) {
     toast.classList.add('show');
     if(window.innerWidth >= 768){
-      toast.style.bottom = "40px"; // PC Toast Placement
+      toast.style.bottom = "40px"; 
     } else {
-      toast.style.bottom = "110px"; // Mobile Toast Placement
+      toast.style.bottom = "110px";
     }
     clearTimeout(toastTimer);
     toastTimer = setTimeout(()=>toast.classList.remove('show'), 3200);
