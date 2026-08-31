@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendTrade | SafePay Escrow</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFBF3; --surface:#FFFFFF; --ink:#191919; --ink-muted:#726F63;
+    --primary:#3538CD; --primary-dark:#2529A6; --marigold:#F2A93B; --mint:#0E9F5F;
+    --line:#E8E2D2;
+    --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  
+  html { background: var(--bg); }
+  body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 100px; overflow-x: hidden; position: relative; }
+  a{color:inherit; text-decoration:none;}
+
+  .app-header{
+    background:rgba(253,251,243,0.85);backdrop-filter:blur(16px);padding:18px 6%;
+    position:sticky;top:0;z-index:100; border-bottom:1px solid var(--line);
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; 
+  }
+  .back-btn{color:var(--primary);font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:14.5px; justify-self: start;}
+  .header-title{font-family:var(--font-display);font-weight:700;font-size:17px; text-align: center;}
+  
+  .desktop-nav { display: none; gap: 24px; align-items: center; justify-self: end; }
+  .d-nav-item { font-size: 14.5px; font-weight: 600; color: var(--ink-muted); cursor: pointer; transition: .3s; }
+  .d-nav-item:hover, .d-nav-item.active { color: var(--primary); }
+
+  .dashboard-header{
+    background:var(--primary);color:white;padding:34px 6% 44px;border-radius:0 0 36px 36px;
+    text-align:center;position:relative;overflow:hidden; z-index: 10;
+  }
+  .dashboard-header::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 85% -20%, rgba(14,159,95,0.35), transparent 60%);
+  }
+  .dashboard-header h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;margin-bottom:8px;position:relative;}
+  .dashboard-header p{opacity:0.85;font-size:0.95rem;position:relative;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;}
+
+  .container { padding: 0 6%; max-width: 820px; margin: 0 auto; position: relative; z-index: 10; }
+
+  /* --- Balance Card --- */
+  .balance-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 24px;
+    padding: 36px 30px; text-align: center; margin: -30px auto 24px;
+    box-shadow: 0 20px 40px -15px rgba(25,25,25,0.1); position: relative;
+  }
+  .balance-label { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 12px; }
+  .balance-amount { font-family: var(--font-display); font-size: 52px; font-weight: 700; color: var(--ink); margin-bottom: 24px; line-height: 1; }
+  
+  .fund-btn {
+    background: var(--primary); color: white; border: none; padding: 16px 32px; border-radius: 100px;
+    font-size: 15px; font-weight: 700; font-family: var(--font-body); cursor: pointer; transition: .3s;
+    display: inline-flex; align-items: center; gap: 10px; width: 100%; max-width: 300px; justify-content: center;
+  }
+  .fund-btn:hover { background: var(--primary-dark); transform: translateY(-3px); box-shadow: 0 12px 20px rgba(53,56,205,0.25); }
+
+  /* --- Sub KPIs --- */
+  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+  .kpi-box { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 20px; text-align: center; }
+  .kpi-box h4 { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .kpi-box .val { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--ink); }
+  .kpi-box .val.escrow { color: var(--marigold); }
+
+  /* --- Transaction Ledger --- */
+  .section-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 24px;
+    padding: 30px; margin-bottom: 40px; box-shadow: 0 8px 24px rgba(25,25,25,0.03);
+  }
+  .section-head { font-family: var(--font-display); font-size: 20px; font-weight: 600; margin-bottom: 24px; border-bottom: 1.5px dashed var(--line); padding-bottom: 16px; display: flex; justify-content: space-between; align-items: center;}
+  
+  .download-btn { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: var(--primary); background: rgba(53,56,205,0.08); padding: 8px 14px; border-radius: 100px; border: none; cursor: pointer; transition: .3s; }
+  .download-btn:hover { background: rgba(53,56,205,0.15); }
+
+  .tx-list { display: flex; flex-direction: column; gap: 16px; }
+  .tx-item { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid var(--bg); }
+  .tx-item:last-child { border-bottom: none; padding-bottom: 0; }
+  
+  .tx-left { display: flex; align-items: center; gap: 14px; }
+  .tx-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(53,56,205,0.06); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .tx-info h4 { font-size: 14.5px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .tx-info p { font-family: var(--font-mono); font-size: 11px; color: var(--ink-muted); font-weight: 600; }
+  
+  .tx-right { text-align: right; }
+  .tx-amount { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .tx-status { display: inline-block; padding: 4px 10px; border-radius: 6px; font-family: var(--font-mono); font-size: 9.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  
+  .status-locked { background: rgba(242,169,59,0.15); color: #B9791C; }
+  .status-released { background: rgba(14,159,95,0.1); color: var(--mint); }
+  .status-deposit { background: var(--ink); color: white; }
+
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;width:100%;background:rgba(253,251,243,0.95);backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:14px 0 22px;z-index:1000;
+  }
+  .nav-item{color:#B3AF9F;text-align:center;font-size:21px;transition:.3s;cursor:pointer;position:relative;}
+  .nav-item.active{color:var(--primary);transform:translateY(-3px);}
+  .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;font-family:var(--font-body);}
+  .nav-dot{position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--primary);opacity:0;transition:.3s;}
+  .nav-item.active .nav-dot{opacity:1;bottom:-9px;}
+
+  @media (min-width: 768px) {
+    .bottom-nav { display: none; } 
+    .desktop-nav { display: flex; } 
+    body { padding-bottom: 60px; }
+  }
+
+  /* --- Toast --- */
+  #toast{
+    position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;
+    box-shadow:0 20px 40px rgba(25,25,25,0.15);font-family:var(--font-mono);font-size:13px;
+    display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.8,.2,1);
+    z-index:2000;max-width:90%;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+  #toast i{color:var(--mint);font-size:18px;}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  <div class="header-title">Wallet</div>
+  <div class="desktop-nav">
+    <a href="shop.html" class="d-nav-item">Discover</a>
+    <a href="bookings.html" class="d-nav-item">Bookings</a>
+    <a href="safepay.html" class="d-nav-item active">SafePay</a>
+  </div>
+</div>
+
+<div class="dashboard-header">
+  <h1>SafePay Ledger</h1>
+  <p><i class="fa-solid fa-shield-heart" style="color:rgba(255,255,255,0.8)"></i> 100% Escrow Protected</p>
+</div>
+
+<div class="container">
+  
+  <div class="balance-card">
+    <div class="balance-label">Funds Loaded</div>
+    <div class="balance-amount">&#8377;15,000</div>
+    <button class="fund-btn" onclick="triggerDeposit()">
+      <i class="fa-solid fa-plus"></i> Load Wallet
+    </button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-box">
+      <h4>Locked in Escrow</h4>
+      <div class="val escrow">&#8377;7,700</div>
+    </div>
+    <div class="kpi-box">
+      <h4>Total Spent</h4>
+      <div class="val">&#8377;28,400</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head">
+      Recent Activity
+      <button class="download-btn"><i class="fa-solid fa-download"></i> Invoices</button>
+    </div>
+    
+    <div class="tx-list">
+      
+      <div class="tx-item">
+        <div class="tx-left">
+          <div class="tx-icon" style="background:rgba(242,169,59,0.15); color:#B9791C;"><i class="fa-solid fa-lock"></i></div>
+          <div class="tx-info">
+            <h4>Krina Shah</h4>
+            <p>Campaign: Summer Menu Launch</p>
+          </div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount">-&#8377;4,500</div>
+          <div class="tx-status status-locked">LOCKED</div>
+        </div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-left">
+          <div class="tx-icon" style="background:rgba(242,169,59,0.15); color:#B9791C;"><i class="fa-solid fa-lock"></i></div>
+          <div class="tx-info">
+            <h4>Devansh Patel</h4>
+            <p>Campaign: Store Anniversary Promo</p>
+          </div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount">-&#8377;3,200</div>
+          <div class="tx-status status-locked">LOCKED</div>
+        </div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-left">
+          <div class="tx-icon" style="background: var(--ink); color: white;"><i class="fa-solid fa-arrow-up"></i></div>
+          <div class="tx-info">
+            <h4>UPI Deposit</h4>
+            <p>28 Aug 2026</p>
+          </div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount" style="color:var(--mint);">+&#8377;10,000</div>
+          <div class="tx-status status-deposit">DEPOSIT</div>
+        </div>
+      </div>
+
+      <div class="tx-item">
+        <div class="tx-left">
+          <div class="tx-icon"><i class="fa-solid fa-check"></i></div>
+          <div class="tx-info">
+            <h4>Aashna Desai</h4>
+            <p>Payout Released (20 Aug 2026)</p>
+          </div>
+        </div>
+        <div class="tx-right">
+          <div class="tx-amount">-&#8377;5,000</div>
+          <div class="tx-status status-released">RELEASED</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="shop.html" class="nav-item"><i class="fa-solid fa-users-viewfinder"></i><span>Discover</span></a>
+  <a href="bookings.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Bookings</span></a>
+  <a href="safepay.html" class="nav-item active"><i class="fa-solid fa-wallet"></i><span>SafePay</span><div class="nav-dot"></div></a>
+</div>
+
+<div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<script>
+  let toastTimer;
+  function triggerDeposit(){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').innerHTML = `<b>Redirecting to Payment Gateway</b>`;
+    
+    toast.classList.add('show');
+    if(window.innerWidth >= 768){
+      toast.style.bottom = "40px"; // PC alignment
+    } else {
+      toast.style.bottom = "110px"; // Mobile alignment above nav
+    }
+    
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
