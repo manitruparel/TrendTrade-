@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendTrade | Creator Stats</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFBF3; --surface:#FFFFFF; --ink:#191919; --ink-muted:#726F63;
+    --primary:#3538CD; --primary-dark:#2529A6; --marigold:#F2A93B; --mint:#0E9F5F;
+    --line:#E8E2D2;
+    --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  
+  html { background: var(--bg); }
+  body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 100px; overflow-x: hidden; }
+  a{color:inherit; text-decoration:none;}
+
+  /* --- Header & Desktop Nav --- */
+  .app-header{
+    background:rgba(253,251,243,0.95);backdrop-filter:blur(14px);padding:18px 6%;
+    position:sticky;top:0;z-index:100; border-bottom:1px solid var(--line);
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  }
+  .back-btn{color:var(--ink);font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:14.5px; justify-self: start;}
+  .header-title{font-family:var(--font-display);font-weight:700;font-size:16px; text-align: center;}
+  
+  .desktop-nav { display: none; gap: 24px; align-items: center; justify-self: end; }
+  .d-nav-item { font-size: 14.5px; font-weight: 600; color: var(--ink-muted); cursor: pointer; transition: .3s; }
+  .d-nav-item:hover, .d-nav-item.active { color: var(--primary); }
+
+  .dashboard-header{
+    background:var(--primary);color:white;padding:34px 6% 44px;border-radius:0 0 36px 36px;
+    text-align:center;position:relative;overflow:hidden; z-index: 10;
+  }
+  .dashboard-header::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 85% -20%, rgba(242,169,59,0.25), transparent 60%);
+  }
+  .dashboard-header h1{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,2.4rem);font-weight:700;margin-bottom:8px;position:relative;}
+  .dashboard-header p{opacity:0.85;font-size:0.95rem;position:relative;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:1px;}
+
+  .container{padding:0 6%;max-width:820px;margin:0 auto;position:relative;z-index:10;}
+
+  /* --- KPI Grid --- */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+    margin: -30px auto 40px;
+  }
+  .kpi-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 20px;
+    padding: 24px 20px; box-shadow: 0 15px 30px -10px rgba(25,25,25,0.08);
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    transition: transform 0.3s;
+  }
+  .kpi-card:hover { transform: translateY(-4px); }
+  .kpi-icon {
+    width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px; font-size: 16px;
+  }
+  .kpi-icon.reach { background: rgba(14,159,95,0.1); color: var(--mint); }
+  .kpi-icon.views { background: rgba(53,56,205,0.1); color: var(--primary); }
+  .kpi-icon.eng { background: rgba(242,169,59,0.15); color: #B9791C; }
+  
+  .kpi-value { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .kpi-label { font-family: var(--font-mono); font-size: 10.5px; font-weight: 700; color: var(--ink-muted); letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* --- Chart Section --- */
+  .section-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 24px;
+    padding: 30px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(25,25,25,0.03);
+  }
+  .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .section-head h3 { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+  .section-badge { background: var(--bg); border: 1px solid var(--line); padding: 6px 12px; border-radius: 100px; font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--ink-muted); }
+
+  .chart-wrapper { display: flex; align-items: flex-end; justify-content: space-between; height: 180px; padding-top: 20px; gap: 8px; border-bottom: 1.5px dashed var(--line); padding-bottom: 10px; margin-bottom: 14px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; flex: 1; position: relative; }
+  .bar { width: 100%; max-width: 40px; background: rgba(53,56,205,0.15); border-radius: 6px 6px 0 0; transition: .4s cubic-bezier(.2,.8,.2,1); cursor: pointer; position: relative; }
+  .bar:hover { background: var(--primary); }
+  .bar-tooltip {
+    position: absolute; top: -35px; left: 50%; transform: translateX(-50%); background: var(--ink); color: white;
+    font-family: var(--font-mono); font-size: 11px; padding: 6px 8px; border-radius: 6px; opacity: 0; pointer-events: none; transition: .2s; white-space: nowrap; font-weight: 600;
+  }
+  .bar-tooltip::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); border-width: 4px 4px 0; border-style: solid; border-color: var(--ink) transparent transparent transparent; }
+  .bar:hover .bar-tooltip { opacity: 1; top: -40px; }
+  .bar-label { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-muted); margin-top: 10px; font-weight: 600; }
+
+  /* --- Demographics --- */
+  .stat-bar-group { margin-top: 20px; }
+  .stat-label { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 600; margin-bottom: 8px; margin-top: 18px; }
+  .stat-label b { font-family: var(--font-mono); color: var(--ink); }
+  .stat-track { height: 10px; background: var(--bg); border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+  .stat-fill { height: 100%; border-radius: 10px; transform-origin: left; transform: scaleX(0); transition: transform 1s cubic-bezier(.22,.9,.28,1) 0.2s; }
+  .loaded .stat-fill { transform: scaleX(1); }
+
+  /* --- Mobile Bottom Nav --- */
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;width:100%;background:rgba(253,251,243,0.95);backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:14px 0 22px;z-index:1000;
+  }
+  .nav-item{color:#B3AF9F;text-align:center;font-size:21px;cursor:pointer;transition:.3s;}
+  .nav-item.active{color:var(--primary);transform:translateY(-3px);}
+  .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;}
+
+  /* --- Desktop Breakpoint Fixes --- */
+  @media (min-width: 768px) {
+    .bottom-nav { display: none; } 
+    .desktop-nav { display: flex; } 
+    body { padding-bottom: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <a href="creator.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Studio</a>
+  <div class="header-title">Analytics</div>
+  <div class="desktop-nav">
+    <a href="creator.html" class="d-nav-item">Gigs</a>
+    <div class="d-nav-item active">Stats</div>
+    <div class="d-nav-item">Earnings</div>
+  </div>
+</div>
+
+<div class="dashboard-header">
+  <h1>Your Report Card</h1>
+  <p><i class="fa-solid fa-shield-check" style="color:var(--marigold)"></i> Verified by TrendTrade</p>
+</div>
+
+<div class="container" id="statsContainer">
+  
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon views"><i class="fa-solid fa-eye"></i></div>
+      <div class="kpi-value">34.2K</div>
+      <div class="kpi-label">Avg Views</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon reach"><i class="fa-solid fa-location-dot"></i></div>
+      <div class="kpi-value">84%</div>
+      <div class="kpi-label">Local Reach</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-icon eng"><i class="fa-solid fa-fire"></i></div>
+      <div class="kpi-value">6.8%</div>
+      <div class="kpi-label">Engagement</div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head">
+      <h3>Profile Views</h3>
+      <div class="section-badge">Last 7 Days</div>
+    </div>
+    
+    <div class="chart-wrapper" id="barChart">
+      <div class="bar-group">
+        <div class="bar" style="height: 30%;" data-height="30%">
+          <div class="bar-tooltip">1.2K</div>
+        </div>
+        <div class="bar-label">M</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 45%;" data-height="45%">
+          <div class="bar-tooltip">2.1K</div>
+        </div>
+        <div class="bar-label">T</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 25%;" data-height="25%">
+          <div class="bar-tooltip">980</div>
+        </div>
+        <div class="bar-label">W</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 60%;" data-height="60%">
+          <div class="bar-tooltip">3.4K</div>
+        </div>
+        <div class="bar-label">T</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 85%; background: var(--primary);" data-height="85%">
+          <div class="bar-tooltip">5.1K</div>
+        </div>
+        <div class="bar-label" style="color:var(--primary)">F</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 50%;" data-height="50%">
+          <div class="bar-tooltip">2.8K</div>
+        </div>
+        <div class="bar-label">S</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar" style="height: 70%;" data-height="70%">
+          <div class="bar-tooltip">4.2K</div>
+        </div>
+        <div class="bar-label">S</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="section-head">
+      <h3>Audience Location</h3>
+      <div class="section-badge">Ahmedabad</div>
+    </div>
+    
+    <div class="stat-bar-group">
+      <div class="stat-label"><span>Sindhu Bhavan Road</span> <b>42%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 42%; background: var(--primary);"></div></div>
+      
+      <div class="stat-label"><span>Prahlad Nagar</span> <b>31%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 31%; background: var(--marigold);"></div></div>
+      
+      <div class="stat-label"><span>Vastrapur / CEPT</span> <b>18%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 18%; background: var(--mint);"></div></div>
+
+      <div class="stat-label"><span>Other Areas</span> <b>9%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 9%; background: var(--ink-muted);"></div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="creator.html" class="nav-item"><i class="fa-solid fa-briefcase"></i><span>Gigs</span></a>
+  <a href="stats.html" class="nav-item active"><i class="fa-solid fa-chart-simple"></i><span>Stats</span><div class="nav-dot"></div></a>
+  <a href="#" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Earnings</span></a>
+</div>
+
+<script>
+  // Simple script to trigger the bar animations when the page loads
+  document.addEventListener("DOMContentLoaded", () => {
+    // Animate demographic bars
+    setTimeout(() => {
+      document.getElementById('statsContainer').classList.add('loaded');
+    }, 100);
+
+    // Animate chart bars from 0 to their actual height
+    const bars = document.querySelectorAll('.bar');
+    bars.forEach(bar => {
+      const targetHeight = bar.getAttribute('data-height');
+      bar.style.height = '0%';
+      setTimeout(() => {
+        bar.style.height = targetHeight;
+      }, 300);
+    });
+  });
+</script>
+</body>
+</html>
