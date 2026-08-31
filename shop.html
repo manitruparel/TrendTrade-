@@ -17,14 +17,14 @@
   
   html { background: var(--bg); }
   body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 100px; overflow-x: hidden; position: relative; }
-  a{color:inherit;}
+  a{color:inherit; text-decoration:none;}
 
   .app-header{
     background:rgba(253,251,243,0.85);backdrop-filter:blur(16px);padding:18px 6%;
     position:sticky;top:0;z-index:100; border-bottom:1px solid var(--line);
     display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; 
   }
-  .back-btn{color:var(--primary);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:14.5px; justify-self: start;}
+  .back-btn{color:var(--primary);font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:14.5px; justify-self: start;}
   .header-title{font-family:var(--font-display);font-weight:700;font-size:17px; text-align: center;}
   
   .desktop-nav { display: none; gap: 24px; align-items: center; justify-self: end; }
@@ -96,7 +96,6 @@
   .receipt-lines .row b{color:var(--ink);font-weight:600;font-size:13.5px;}
   .receipt-lines .row b.hl{color:var(--primary);}
 
-  /* Updated Button Area for Negotiate Feature */
   .card-actions { display: flex; gap: 10px; width: 100%; margin-top: auto; }
   .hire-btn{
     flex: 1; background:var(--ink);color:white;padding:13px;border-radius:100px;font-weight:700;font-size:14px;
@@ -179,9 +178,9 @@
   <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
   <div class="header-title">Matchmaking Feed</div>
   <div class="desktop-nav">
-    <div class="d-nav-item active">Discover</div>
-    <div class="d-nav-item">Bookings</div>
-    <div class="d-nav-item">SafePay</div>
+    <a href="shop.html" class="d-nav-item active">Discover</a>
+    <a href="bookings.html" class="d-nav-item">Bookings</a>
+    <a href="safepay.html" class="d-nav-item">SafePay</a>
   </div>
 </div>
 
@@ -202,10 +201,10 @@
 </div>
 
 <div class="bottom-nav">
-  <div class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span><div class="nav-dot"></div></div>
-  <div class="nav-item active"><i class="fa-solid fa-users-viewfinder"></i><span>Discover</span><div class="nav-dot"></div></div>
-  <div class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Bookings</span><div class="nav-dot"></div></div>
-  <div class="nav-item"><i class="fa-solid fa-wallet"></i><span>SafePay</span><div class="nav-dot"></div></div>
+  <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+  <a href="shop.html" class="nav-item active"><i class="fa-solid fa-users-viewfinder"></i><span>Discover</span><div class="nav-dot"></div></a>
+  <a href="bookings.html" class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Bookings</span></a>
+  <a href="safepay.html" class="nav-item"><i class="fa-solid fa-wallet"></i><span>SafePay</span></a>
 </div>
 
 <div id="toast"><i class="fa-solid fa-shield-heart" id="toastIcon"></i><span id="toastMsg"></span></div>
