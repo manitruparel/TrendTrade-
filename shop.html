@@ -194,7 +194,7 @@
 
   <div class="header-section">
     <h2>Local Creators</h2>
-    <div class="result-count" id="resultCount">LOADING...</div>
+    <div class="result-count" id="resultCount">12 PROFILES ACTIVE</div>
   </div>
 
   <div class="feed-grid" id="creatorFeed"></div>
@@ -247,63 +247,61 @@
 </div>
 
 <script>
-  const maleNames = ["Devansh", "Parth", "Karan", "Aman", "Rishabh", "Harsh", "Meet", "Darshan", "Yash", "Ronak"];
-  const femaleNames = ["Krina", "Pooja", "Aashna", "Mansi", "Riya", "Shivani", "Drashti", "Nidhi", "Aditi", "Bhoomi"];
-  const lastNames = ["Shah", "Patel", "Desai", "Mehta", "Rajput", "Trivedi", "Chudasama", "Thakkar", "Joshi", "Panchal"];
-  const niches = ["Ahmedabad Foodie", "Gujarati Vlogger", "SG Highway Gyms", "Cafe Reviewer", "Navratri Fashion", "Tech & Gadgets", "Lifestyle & Beauty", "Local Events"];
+  // Hand-curated realistic profiles
+  const curatedCreators = [
+    { name: "Krina Shah", niche: "Ahmedabad Foodie", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80", views: 34.2, reach: 89, eng: 6.8 },
+    { name: "Devansh Patel", niche: "Tech & Gadgets", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80", views: 42.1, reach: 76, eng: 5.2 },
+    { name: "Aashna Desai", niche: "Navratri Fashion", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80", views: 22.4, reach: 92, eng: 8.1 },
+    { name: "Karan Chudasama", niche: "SG Highway Gyms", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", views: 18.9, reach: 84, eng: 7.4 },
+    { name: "Riya Mehta", niche: "Cafe Reviewer", img: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&w=200&q=80", views: 29.5, reach: 88, eng: 6.1 },
+    { name: "Meet Trivedi", niche: "Local Events", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80", views: 15.2, reach: 95, eng: 9.3 },
+    { name: "Pooja Rajput", niche: "Lifestyle & Beauty", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80", views: 51.3, reach: 72, eng: 4.8 },
+    { name: "Harsh Panchal", niche: "Gujarati Vlogger", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80", views: 64.8, reach: 81, eng: 5.9 },
+    { name: "Nidhi Joshi", niche: "Aesthetics & Decor", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80", views: 12.5, reach: 91, eng: 7.8 },
+    { name: "Parth Thakkar", niche: "Street Food Blogger", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80", views: 88.2, reach: 94, eng: 8.5 },
+    { name: "Shivani Shah", niche: "Luxury Lifestyle", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80", views: 27.6, reach: 68, eng: 4.2 },
+    { name: "Yash Desai", niche: "Fitness & Wellness", img: "https://images.unsplash.com/photo-1504257432389-523431e15ce8?auto=format&fit=crop&w=200&q=80", views: 31.0, reach: 85, eng: 6.4 }
+  ];
 
   const feedContainer = document.getElementById('creatorFeed');
-  const totalProfiles = 120;
 
-  function generateProfiles(){
+  function renderProfiles(){
     let html = '';
-    for(let i=0;i<totalProfiles;i++){
-      const isMale = Math.random() < 0.5;
-      const fName = isMale
-        ? maleNames[Math.floor(Math.random()*maleNames.length)]
-        : femaleNames[Math.floor(Math.random()*femaleNames.length)];
-      const lName = lastNames[Math.floor(Math.random()*lastNames.length)];
-      const niche = niches[Math.floor(Math.random()*niches.length)];
-      const views = (Math.random()*40+5).toFixed(1);
-      const reach = Math.floor(Math.random()*20+80);
-      const engagement = (Math.random()*8+4).toFixed(1);
-      const portraitId = Math.floor(Math.random()*99);
-      const avatarUrl = `https://randomuser.me/api/portraits/${isMale ? 'men' : 'women'}/${portraitId}.jpg`;
-      const price = Math.floor(views*150).toLocaleString();
-      const delay = (i<24) ? i*0.045 : 0;
+    curatedCreators.forEach((creator, i) => {
+      const price = Math.floor(creator.views * 150).toLocaleString();
+      const delay = i * 0.05;
 
       html += `
-      <div class="creator-card" data-niche="${niche.toLowerCase()}" style="animation-delay:${delay}s" onclick="openReportCard('${fName} ${lName}', '${avatarUrl}', '${niche}')">
+      <div class="creator-card" data-niche="${creator.niche.toLowerCase()}" style="animation-delay:${delay}s" onclick="openReportCard('${creator.name}', '${creator.img}', '${creator.niche}')">
         <div class="card-glare"></div>
         <div class="profile-header">
-          <div class="avatar" style="background-image:url('${avatarUrl}');">
+          <div class="avatar" style="background-image:url('${creator.img}');">
             <div class="verified-tick"><i class="fa-solid fa-check"></i></div>
           </div>
           <div class="profile-info">
-            <h3>${fName} ${lName}</h3>
-            <div class="niche-tag">${niche}</div>
+            <h3>${creator.name}</h3>
+            <div class="niche-tag">${creator.niche}</div>
           </div>
         </div>
         <div class="receipt-lines">
-          <div class="row"><span>Avg Views..........</span><b>${views}K</b></div>
-          <div class="row"><span>Local Reach........</span><b class="hl">${reach}%</b></div>
-          <div class="row"><span>Engagement.........</span><b>${engagement}%</b></div>
+          <div class="row"><span>Avg Views..........</span><b>${creator.views}K</b></div>
+          <div class="row"><span>Local Reach........</span><b class="hl">${creator.reach}%</b></div>
+          <div class="row"><span>Engagement.........</span><b>${creator.eng}%</b></div>
         </div>
         <div class="card-actions">
-          <button class="hire-btn" onclick="event.stopPropagation(); triggerHire('${fName} ${lName}', '${price}')">
+          <button class="hire-btn" onclick="event.stopPropagation(); triggerHire('${creator.name}', '${price}')">
             <i class="fa-solid fa-lock"></i> Hire &nbsp;<span class="price">&#8377;${price}</span>
           </button>
-          <button class="chat-btn" onclick="event.stopPropagation(); triggerChat('${fName} ${lName}')" title="Message Creator">
+          <button class="chat-btn" onclick="event.stopPropagation(); triggerChat('${creator.name}')" title="Message Creator">
             <i class="fa-regular fa-comment-dots"></i>
           </button>
         </div>
       </div>`;
-    }
+    });
     feedContainer.innerHTML = html;
-    updateResultCount(totalProfiles);
     attachTilt();
   }
-  generateProfiles();
+  renderProfiles();
 
   function attachTilt(){
     if(!window.matchMedia("(pointer: fine)").matches) return;
@@ -350,14 +348,10 @@
         feedContainer.innerHTML = `<div class="no-results"><i class="fa-solid fa-ghost"></i><h3>No creators found</h3><p>Try a different niche like "Fashion" or "Foodie"</p></div>`;
       }, 210);
     } else if(document.querySelector('.no-results')){
-      generateProfiles();
+      renderProfiles();
       filterCreators();
     }
-    updateResultCount(visible);
-  }
-
-  function updateResultCount(count){
-    document.getElementById('resultCount').innerText = `${count} PROFILES ACTIVE`;
+    document.getElementById('resultCount').innerText = `${visible} PROFILES ACTIVE`;
   }
 
   let toastTimer;
