@@ -74,7 +74,7 @@
   .creator-card:hover .card-glare{opacity:1;}
 
   .profile-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
-  .avatar{width:62px;height:62px;border-radius:16px;background-size:cover;background-position:center;flex-shrink:0;box-shadow:0 6px 16px rgba(25,25,25,0.1);position:relative;}
+  .avatar{width:62px;height:62px;border-radius:16px;background-size:cover;background-position:top;flex-shrink:0;box-shadow:0 6px 16px rgba(25,25,25,0.1);position:relative;}
   .verified-tick{
     position:absolute;bottom:-6px;right:-6px;background:var(--mint);border:2px solid var(--surface);
     border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;
@@ -152,7 +152,7 @@
   .modal-close:hover { background: var(--ink); color: white; transform: rotate(90deg); }
   
   .modal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1.5px dashed var(--line); }
-  .modal-avatar { width: 70px; height: 70px; border-radius: 20px; background-size: cover; background-position: center; position: relative; box-shadow: 0 8px 20px rgba(25,25,25,0.1); }
+  .modal-avatar { width: 70px; height: 70px; border-radius: 20px; background-size: cover; background-position: top; position: relative; box-shadow: 0 8px 20px rgba(25,25,25,0.1); }
   .verified-badge { position: absolute; bottom: -8px; right: -8px; background: var(--mint); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 3px solid var(--surface); box-shadow: 0 4px 10px rgba(14,159,95,0.3); }
   
   .modal-title h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
@@ -247,20 +247,20 @@
 </div>
 
 <script>
-  // Hand-curated realistic profiles
+  // Hand-curated realistic profiles with authentic images representing Indian creators
   const curatedCreators = [
-    { name: "Krina Shah", niche: "Ahmedabad Foodie", img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80", views: 34.2, reach: 89, eng: 6.8 },
-    { name: "Devansh Patel", niche: "Tech & Gadgets", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80", views: 42.1, reach: 76, eng: 5.2 },
-    { name: "Aashna Desai", niche: "Navratri Fashion", img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=200&q=80", views: 22.4, reach: 92, eng: 8.1 },
-    { name: "Karan Chudasama", niche: "SG Highway Gyms", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80", views: 18.9, reach: 84, eng: 7.4 },
-    { name: "Riya Mehta", niche: "Cafe Reviewer", img: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&w=200&q=80", views: 29.5, reach: 88, eng: 6.1 },
-    { name: "Meet Trivedi", niche: "Local Events", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80", views: 15.2, reach: 95, eng: 9.3 },
-    { name: "Pooja Rajput", niche: "Lifestyle & Beauty", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80", views: 51.3, reach: 72, eng: 4.8 },
-    { name: "Harsh Panchal", niche: "Gujarati Vlogger", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80", views: 64.8, reach: 81, eng: 5.9 },
-    { name: "Nidhi Joshi", niche: "Aesthetics & Decor", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80", views: 12.5, reach: 91, eng: 7.8 },
-    { name: "Parth Thakkar", niche: "Street Food Blogger", img: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&q=80", views: 88.2, reach: 94, eng: 8.5 },
-    { name: "Shivani Shah", niche: "Luxury Lifestyle", img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80", views: 27.6, reach: 68, eng: 4.2 },
-    { name: "Yash Desai", niche: "Fitness & Wellness", img: "https://images.unsplash.com/photo-1504257432389-523431e15ce8?auto=format&fit=crop&w=200&q=80", views: 31.0, reach: 85, eng: 6.4 }
+    { name: "Krina Shah", niche: "Ahmedabad Foodie", img: "https://images.unsplash.com/photo-1615243881472-88f572798e09?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 34.2, reach: 89, eng: 6.8 },
+    { name: "Devansh Patel", niche: "Tech & Gadgets", img: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 42.1, reach: 76, eng: 5.2 },
+    { name: "Aashna Desai", niche: "Navratri Fashion", img: "https://images.unsplash.com/photo-1617260840582-772921a97d91?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 22.4, reach: 92, eng: 8.1 },
+    { name: "Karan Chudasama", niche: "SG Highway Gyms", img: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 18.9, reach: 84, eng: 7.4 },
+    { name: "Riya Mehta", niche: "Cafe Reviewer", img: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 29.5, reach: 88, eng: 6.1 },
+    { name: "Meet Trivedi", niche: "Local Events", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 15.2, reach: 95, eng: 9.3 },
+    { name: "Pooja Rajput", niche: "Lifestyle & Beauty", img: "https://images.unsplash.com/photo-1588731247530-4076bfc54e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 51.3, reach: 72, eng: 4.8 },
+    { name: "Harsh Panchal", niche: "Gujarati Vlogger", img: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 64.8, reach: 81, eng: 5.9 },
+    { name: "Nidhi Joshi", niche: "Aesthetics & Decor", img: "https://images.unsplash.com/photo-1615243881515-f5db622dd81f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 12.5, reach: 91, eng: 7.8 },
+    { name: "Parth Thakkar", niche: "Street Food Blogger", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 88.2, reach: 94, eng: 8.5 },
+    { name: "Shivani Shah", niche: "Luxury Lifestyle", img: "https://images.unsplash.com/photo-1605993439219-9d09d20b1fcb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 27.6, reach: 68, eng: 4.2 },
+    { name: "Yash Desai", niche: "Fitness & Wellness", img: "https://images.unsplash.com/photo-1616428784116-f2d4e7efcd3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 31.0, reach: 85, eng: 6.4 }
   ];
 
   const feedContainer = document.getElementById('creatorFeed');
