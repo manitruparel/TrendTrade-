@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendTrade | Creator Studio</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFBF3; --surface:#FFFFFF; --ink:#191919; --ink-muted:#726F63;
+    --primary:#3538CD; --primary-dark:#2529A6; --marigold:#F2A93B; --mint:#0E9F5F;
+    --line:#E8E2D2;
+    --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);padding-bottom:100px;overflow-x:hidden;}
+  a{color:inherit;}
+
+  .app-header{
+    background:rgba(253,251,243,0.9);backdrop-filter:blur(14px);padding:18px 6%;
+    display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;
+    border-bottom:1px solid var(--line);
+  }
+  .back-btn{color:var(--ink);text-decoration:none;font-weight:700;display:flex;align-items:center;gap:8px;font-size:14.5px;}
+  .header-title{font-family:var(--font-display);font-weight:700;font-size:16px;}
+
+  .dashboard-header{
+    background:var(--primary);color:white;padding:44px 6% 74px;border-radius:0 0 36px 36px;
+    text-align:center;position:relative;overflow:hidden;
+  }
+  .dashboard-header::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(circle at 85% 20%, rgba(242,169,59,0.35), transparent 55%);
+  }
+  .dashboard-header h1{font-family:var(--font-display);font-size:clamp(2rem,5vw,2.7rem);font-weight:700;margin-bottom:10px;position:relative;letter-spacing:-1px;}
+  .dashboard-header p{opacity:0.85;font-size:1.05rem;position:relative;font-weight:500;}
+
+  .container{padding:0 6%;max-width:820px;margin:0 auto;position:relative;z-index:10;}
+
+  .calculator{
+    background:var(--surface);padding:32px 28px;border-radius:24px;box-shadow:0 25px 50px -20px rgba(25,25,25,0.2);
+    text-align:center;margin:-46px auto 44px;border:1px solid var(--line);position:relative;max-width:500px;
+  }
+  .calc-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:1.5px;color:var(--ink-muted);text-transform:uppercase;margin-bottom:6px;}
+  .calculator h3{margin-bottom:22px;font-size:19px;font-family:var(--font-display);font-weight:600;}
+  #followerCount{font-size:16px;font-weight:700;color:var(--ink-muted);margin-bottom:16px;font-family:var(--font-mono);}
+  input[type=range]{
+    width:100%;-webkit-appearance:none;appearance:none;background:var(--line);height:6px;border-radius:5px;margin-bottom:24px;
+    transition:background .1s;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--marigold);
+    cursor:pointer;box-shadow:0 6px 14px rgba(242,169,59,0.5);border:3px solid white;
+    transition:transform .15s;
+  }
+  input[type=range]:active::-webkit-slider-thumb{transform:scale(1.25);}
+  input[type=range]::-moz-range-thumb{
+    width:26px;height:26px;border-radius:50%;background:var(--marigold);cursor:pointer;
+    box-shadow:0 6px 14px rgba(242,169,59,0.5);border:3px solid white;
+  }
+  @keyframes resultPulse{0%{transform:scale(1);}40%{transform:scale(1.08);}100%{transform:scale(1);}}
+  .calc-result.pulse{animation:resultPulse .3s ease;}
+  .calc-divider{border-top:1.5px dashed var(--line);position:relative;margin-bottom:18px;}
+  .calc-divider::before,.calc-divider::after{content:'';position:absolute;top:50%;transform:translateY(-50%);width:22px;height:22px;background:var(--bg);border-radius:50%;}
+  .calc-divider::before{left:-28px;}
+  .calc-divider::after{right:-28px;}
+  .calc-label{font-size:11px;color:var(--ink-muted);text-transform:uppercase;font-weight:700;letter-spacing:1px;margin-bottom:6px;font-family:var(--font-mono);}
+  .calc-result{font-size:44px;font-weight:700;color:var(--primary);font-family:var(--font-display);}
+
+  h2.section-title{font-size:22px;margin-bottom:20px;font-weight:600;font-family:var(--font-display);}
+
+  .gig-feed{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-bottom:20px;}
+
+  .gig-card{
+    border-radius:22px;border:1px solid var(--line);background:var(--surface);
+    box-shadow:0 4px 14px rgba(25,25,25,0.03);transition:box-shadow .35s;overflow:hidden;
+    position:relative;will-change:transform;
+  }
+  .gig-card:hover{box-shadow:0 22px 40px -14px rgba(25,25,25,0.14);}
+  .gig-img{height:150px;background-size:cover;background-position:center;position:relative;transition:transform .5s ease;}
+  .gig-card:hover .gig-img{transform:scale(1.06);}
+  .price-tag{
+    position:absolute;bottom:0;left:0;background:var(--marigold);color:var(--ink);padding:7px 16px 7px 14px;
+    border-radius:0 12px 0 0;font-weight:700;font-size:13px;font-family:var(--font-mono);
+    transition:transform .5s ease;
+  }
+  .gig-card:hover .price-tag{transform:scale(0.94);}
+  .gig-content{padding:20px;border-top:1.5px dashed var(--line);position:relative;}
+  .gig-content::before,.gig-content::after{content:'';position:absolute;top:-11px;width:22px;height:22px;background:var(--bg);border-radius:50%;}
+  .gig-content::before{left:-11px;}
+  .gig-content::after{right:-11px;}
+  .gig-content h3{font-size:17px;margin-bottom:6px;font-weight:700;}
+  .gig-content p{color:var(--ink-muted);font-size:13.5px;margin-bottom:16px;line-height:1.5;}
+  .apply-btn{
+    background:var(--ink);color:white;padding:12px;border-radius:100px;font-weight:700;text-align:center;
+    display:block;text-decoration:none;font-size:14px;transition:.3s;border:none;width:100%;cursor:pointer;font-family:var(--font-body);
+  }
+  .apply-btn:hover{background:var(--primary);}
+
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;width:100%;background:rgba(253,251,243,0.95);backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:14px 0 22px;z-index:1000;
+  }
+  .nav-item{color:#B3AF9F;text-align:center;font-size:21px;cursor:pointer;transition:.3s;}
+  .nav-item.active{color:var(--primary);transform:translateY(-3px);}
+  .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;}
+
+  @media (min-width: 768px) {
+    .bottom-nav { display: none; }
+    body { padding-bottom: 40px; }
+  }
+
+  #toast{
+    position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;
+    box-shadow:0 20px 40px rgba(25,25,25,0.15);font-family:var(--font-mono);font-size:12.5px;
+    display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.8,.2,1);
+    z-index:2000;max-width:90%;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+  #toast i{color:var(--mint);font-size:18px;}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  <div class="header-title">Creator Studio</div>
+  <div style="width:24px;"></div>
+</div>
+
+<div class="dashboard-header">
+  <h1>Monetize Local.</h1>
+  <p>Zero platform fees. 100% guaranteed SafePay payouts.</p>
+</div>
+
+<div class="container">
+  <div class="calculator">
+    <div class="calc-eyebrow">RATE ESTIMATOR</div>
+    <h3>Calculate Your Gig Rate</h3>
+    <div id="followerCount">10,000 Followers</div>
+    <input type="range" id="followerSlider" min="1000" max="1000000" step="1000" value="10000">
+    <div class="calc-divider"></div>
+    <div class="calc-label">Est. Value Per Reel</div>
+    <div class="calc-result" id="earningsResult">&#8377;2,500</div>
+  </div>
+
+  <h2 class="section-title">Open Gigs Near You</h2>
+  <div class="gig-feed">
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;3,000</div>
+      </div>
+      <div class="gig-content">
+        <h3>Roastery Coffee House, Sindhu Bhavan</h3>
+        <p>Looking for a food vlogger to review our new weekend brunch menu.</p>
+        <button class="apply-btn" onclick="triggerApply('Roastery Coffee House')">Apply Now</button>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;4,500</div>
+      </div>
+      <div class="gig-content">
+        <h3>Anytime Fitness, Prahlad Nagar</h3>
+        <p>Need a fitness creator for a 3-part reel series showcasing our new equipment.</p>
+        <button class="apply-btn" onclick="triggerApply('Anytime Fitness')">Apply Now</button>
+      </div>
+    </div>
+
+    <div class="gig-card">
+      <div class="gig-img" style="background-image:url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&w=600&q=80');">
+        <div class="price-tag">Pays &#8377;2,200</div>
+      </div>
+      <div class="gig-content">
+        <h3>Makeba The Lounge, Vastrapur</h3>
+        <p>Quick 30-second reel featuring our new seasonal cold brew menu.</p>
+        <button class="apply-btn" onclick="triggerApply('Makeba The Lounge')">Apply Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></div>
+  <div class="nav-item active"><i class="fa-solid fa-briefcase"></i><span>Gigs</span></div>
+  <div class="nav-item"><i class="fa-solid fa-chart-simple"></i><span>Stats</span></div>
+  <div class="nav-item"><i class="fa-solid fa-wallet"></i><span>Earnings</span></div>
+</div>
+
+<div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<script>
+  const slider = document.getElementById("followerSlider");
+  const followerCount = document.getElementById("followerCount");
+  const earningsResult = document.getElementById("earningsResult");
+
+  function formatFollowers(v){
+    if(v >= 1000000) return (v/1000000).toFixed(v % 1000000 === 0 ? 0 : 1) + "M";
+    if(v >= 1000) return (v/1000).toFixed(v % 1000 === 0 ? 0 : 1) + "K";
+    return v;
+  }
+
+  function updateSliderFill(){
+    const min = +slider.min, max = +slider.max, val = +slider.value;
+    const pct = ((val - min) / (max - min)) * 100;
+    slider.style.background = `linear-gradient(90deg, var(--marigold) ${pct}%, var(--line) ${pct}%)`;
+  }
+
+  slider.oninput = function(){
+    const val = parseInt(this.value);
+    followerCount.innerHTML = val.toLocaleString() + " Followers  (" + formatFollowers(val) + ")";
+    const total = Math.round(500 + (val/1000)*200);
+    earningsResult.innerHTML = "&#8377;" + total.toLocaleString();
+    earningsResult.classList.remove('pulse');
+    void earningsResult.offsetWidth;
+    earningsResult.classList.add('pulse');
+    updateSliderFill();
+  };
+  updateSliderFill();
+
+  document.querySelectorAll('.gig-card').forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      if(!window.matchMedia("(pointer: fine)").matches) return;
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width;
+      const y = (e.clientY - r.top) / r.height;
+      const rx = (0.5 - y) * 6;
+      const ry = (x - 0.5) * 6;
+      card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{ card.style.transform = ''; });
+  });
+
+  let toastTimer;
+  function triggerApply(shop){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').innerHTML = `<b>Application sent</b> to ${shop} &middot; they'll review your Report Card`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'), 3200);
+  }
+</script>
+</body>
+</html>
