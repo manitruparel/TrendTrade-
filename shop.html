@@ -14,47 +14,49 @@
     --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  body{background:transparent;color:var(--ink);font-family:var(--font-body);padding-bottom:100px;overflow-x:hidden;}
+  
+  /* FIX: Ensure body has the correct background color, but allow z-index to work */
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);padding-bottom:100px;overflow-x:hidden; position: relative;}
   a{color:inherit;}
 
-  /* --- Soothing Background Animation --- */
+  /* --- Soothing Background Animation (FIXED Z-INDEX) --- */
   .bg-anim {
-    position: fixed; inset: 0; width: 100vw; height: 100vh;
-    z-index: -1; overflow: hidden; pointer-events: none; background: var(--bg);
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 0; /* Changed from -1 so it sits ON TOP of body background, but BEHIND content */
+    overflow: hidden; pointer-events: none; 
   }
   .bg-anim .blob {
-    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.6;
+    position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5;
     animation: floatBlob 20s infinite alternate ease-in-out;
   }
   .bg-anim .blob1 {
-    width: 45vw; height: 45vw; background: rgba(53, 56, 205, 0.08);
+    width: 50vw; height: 50vw; background: rgba(53, 56, 205, 0.15); /* Slightly darker so it's visible */
     top: -10%; left: -10%;
   }
   .bg-anim .blob2 {
-    width: 40vw; height: 40vw; background: rgba(242, 169, 59, 0.08);
+    width: 45vw; height: 45vw; background: rgba(242, 169, 59, 0.15); /* Slightly darker */
     bottom: -10%; right: -10%; animation-delay: -10s;
   }
   @keyframes floatBlob {
     0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(8%, 15%) scale(1.1); }
+    100% { transform: translate(10%, 20%) scale(1.15); }
   }
 
-  /* --- Header & Desktop Nav --- */
+  /* --- Header & Desktop Nav (FIXED ALIGNMENT) --- */
   .app-header{
-    background:rgba(253,251,243,0.85);backdrop-filter:blur(16px);padding:18px 6%;
-    display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;
-    border-bottom:1px solid var(--line);
+    background:rgba(253,251,243,0.9);backdrop-filter:blur(16px);padding:18px 6%;
+    position:sticky;top:0;z-index:100; border-bottom:1px solid var(--line);
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; /* FIX: Grid guarantees perfect centering */
   }
-  .back-btn{color:var(--primary);text-decoration:none;font-weight:700;display:flex;align-items:center;gap:8px;font-size:14.5px; z-index: 2;}
-  .header-title{font-family:var(--font-display);font-weight:700;font-size:17px; z-index: 2;}
+  .back-btn{color:var(--primary);text-decoration:none;font-weight:700;display:inline-flex;align-items:center;gap:8px;font-size:14.5px; justify-self: start;}
+  .header-title{font-family:var(--font-display);font-weight:700;font-size:17px; text-align: center;}
   
-  .desktop-nav { display: none; gap: 24px; align-items: center; z-index: 2; }
+  .desktop-nav { display: none; gap: 24px; align-items: center; justify-self: end; }
   .d-nav-item { font-size: 14.5px; font-weight: 600; color: var(--ink-muted); cursor: pointer; transition: .3s; }
   .d-nav-item:hover, .d-nav-item.active { color: var(--primary); }
 
-  .mobile-spacer { width: 70px; } /* Balances header on mobile */
-
-  .container{padding:26px 6% 0;max-width:1240px;margin:0 auto;}
+  /* Ensure main content sits above the animated background */
+  .container { padding: 26px 6% 0; max-width: 1240px; margin: 0 auto; position: relative; z-index: 10; }
 
   .search-container{position:sticky;top:65px;z-index:90;padding:6px 0 18px;}
   .search-container::before {
@@ -140,10 +142,8 @@
 
   /* --- Desktop Breakpoint Fixes --- */
   @media (min-width: 768px) {
-    .bottom-nav { display: none; } /* Hide ugly bottom nav on PC */
-    .mobile-spacer { display: none; }
-    .desktop-nav { display: flex; } /* Show top nav on PC */
-    .header-title { position: absolute; left: 50%; transform: translateX(-50%); } /* Center title perfectly */
+    .bottom-nav { display: none; } /* Hide mobile nav on PC */
+    .desktop-nav { display: flex; } /* Show top right nav on PC */
     body { padding-bottom: 60px; }
   }
 
@@ -207,7 +207,6 @@
     <div class="d-nav-item">Bookings</div>
     <div class="d-nav-item">SafePay</div>
   </div>
-  <div class="mobile-spacer"></div>
 </div>
 
 <div class="container">
@@ -327,7 +326,7 @@
   generateProfiles();
 
   function attachTilt(){
-    if(!window.matchMedia("(pointer: fine)").matches) return; // Disable hover effects on touch devices
+    if(!window.matchMedia("(pointer: fine)").matches) return;
     document.querySelectorAll('.creator-card').forEach(card=>{
       const glare = card.querySelector('.card-glare');
       card.addEventListener('mousemove', e=>{
@@ -388,6 +387,8 @@
     toast.classList.add('show');
     if(window.innerWidth >= 768){
       toast.style.bottom = "40px"; // Adjust toast position on desktop since there's no bottom nav
+    } else {
+      toast.style.bottom = "110px";
     }
     clearTimeout(toastTimer);
     toastTimer = setTimeout(()=>toast.classList.remove('show'), 3200);
