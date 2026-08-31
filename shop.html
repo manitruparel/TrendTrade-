@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrendTrade | Retailer App</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FDFBF3; --surface:#FFFFFF; --ink:#191919; --ink-muted:#726F63;
+    --primary:#3538CD; --primary-dark:#2529A6; --marigold:#F2A93B; --mint:#0E9F5F;
+    --line:#E8E2D2;
+    --font-display:'Fraunces', serif; --font-body:'Inter', sans-serif; --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-body);padding-bottom:100px;overflow-x:hidden;}
+  a{color:inherit;}
+
+  .app-header{
+    background:rgba(253,251,243,0.9);backdrop-filter:blur(14px);padding:18px 6%;
+    display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;
+    border-bottom:1px solid var(--line);
+  }
+  .back-btn{color:var(--primary);text-decoration:none;font-weight:700;display:flex;align-items:center;gap:8px;font-size:14.5px;}
+  .header-title{font-family:var(--font-display);font-weight:700;font-size:17px;}
+
+  .container{padding:26px 6% 0;max-width:1240px;margin:0 auto;}
+
+  .search-container{position:sticky;top:65px;z-index:90;background:var(--bg);padding:6px 0 18px;}
+  .search-bar{
+    background:var(--surface);padding:15px 22px;border-radius:100px;display:flex;align-items:center;gap:14px;
+    border:1.5px solid var(--line);box-shadow:0 8px 20px rgba(25,25,25,0.04);transition:.3s;
+  }
+  .search-bar:focus-within{border-color:var(--primary);box-shadow:0 8px 24px rgba(53,56,205,0.15);}
+  .search-bar input{border:none;outline:none;width:100%;font-size:15px;font-weight:500;color:var(--ink);background:transparent;font-family:var(--font-body);}
+  .search-bar input::placeholder{color:#A8A499;}
+  .search-bar i{color:var(--primary);font-size:17px;}
+
+  .header-section{margin-bottom:22px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;}
+  .header-section h2{font-family:var(--font-display);font-size:26px;font-weight:600;letter-spacing:-0.5px;}
+  .result-count{
+    font-family:var(--font-mono);color:var(--primary);font-weight:700;background:rgba(53,56,205,0.08);
+    padding:6px 13px;border-radius:100px;font-size:12.5px;letter-spacing:0.3px;
+  }
+
+  .feed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;}
+
+  .creator-card{
+    background:var(--surface);border-radius:22px;border:1px solid var(--line);
+    box-shadow:0 4px 14px rgba(25,25,25,0.03);position:relative;overflow:visible;
+    display:flex;flex-direction:column;padding:24px;cursor:pointer;
+    opacity:0;animation:stampSettle .7s cubic-bezier(.22,.9,.28,1) forwards;
+    transition:box-shadow .35s, border-color .35s;
+    will-change:transform;
+  }
+  @keyframes stampSettle{
+    0%{opacity:0;transform:translateY(28px) scale(0.88) rotate(-2.5deg);}
+    55%{opacity:1;transform:translateY(-5px) scale(1.035) rotate(1deg);}
+    100%{opacity:1;transform:translateY(0) scale(1) rotate(0);}
+  }
+  .creator-card:hover{border-color:var(--primary);box-shadow:0 22px 40px -14px rgba(53,56,205,0.2);}
+  .card-glare{position:absolute;inset:0;border-radius:22px;pointer-events:none;opacity:0;transition:opacity .3s;mix-blend-mode:overlay;z-index:5;}
+  .creator-card:hover .card-glare{opacity:1;}
+
+  .profile-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .avatar{width:62px;height:62px;border-radius:16px;background-size:cover;background-position:center;flex-shrink:0;box-shadow:0 6px 16px rgba(25,25,25,0.1);position:relative;}
+  .verified-tick{
+    position:absolute;bottom:-6px;right:-6px;background:var(--mint);border:2px solid var(--surface);
+    border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;
+  }
+  .verified-tick::after{
+    content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--mint);
+    opacity:0.6;animation:pulseRing 2.2s ease-out infinite;
+  }
+  @keyframes pulseRing{0%{transform:scale(0.8);opacity:0.6;}100%{transform:scale(1.8);opacity:0;}}
+  .verified-tick i{color:white;font-size:10px;position:relative;z-index:2;}
+  .profile-info h3{font-size:16.5px;font-weight:700;margin-bottom:5px;}
+  .niche-tag{display:inline-block;background:var(--bg);color:var(--ink-muted);padding:4px 10px;border-radius:7px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;border:1px solid var(--line);}
+
+  .receipt-lines{
+    border-top:1.5px dashed var(--line);border-bottom:1.5px dashed var(--line);
+    padding:14px 2px;margin-bottom:20px;font-family:var(--font-mono);
+  }
+  .receipt-lines .row{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--ink-muted);padding:4px 0;}
+  .receipt-lines .row b{color:var(--ink);font-weight:600;font-size:13.5px;}
+  .receipt-lines .row b.hl{color:var(--primary);}
+
+  .hire-btn{
+    background:var(--ink);color:white;padding:13px;border-radius:100px;font-weight:700;font-size:14px;
+    text-align:center;display:flex;justify-content:center;align-items:center;gap:9px;
+    border:none;cursor:pointer;width:100%;transition:.3s;font-family:var(--font-body);
+  }
+  .hire-btn:hover{background:var(--primary);transform:translateY(-2px);box-shadow:0 10px 20px rgba(53,56,205,0.25);}
+  .hire-btn .price{font-family:var(--font-mono);}
+
+  .bottom-nav{
+    position:fixed;bottom:0;left:0;width:100%;background:rgba(253,251,243,0.95);backdrop-filter:blur(16px);
+    border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:14px 0 22px;z-index:1000;
+  }
+  .nav-item{color:#B3AF9F;text-align:center;font-size:21px;transition:.3s;cursor:pointer;position:relative;}
+  .nav-item.active{color:var(--primary);transform:translateY(-3px);}
+  .nav-item span{display:block;font-size:10px;margin-top:6px;font-weight:700;font-family:var(--font-body);}
+  .nav-dot{position:absolute;bottom:-11px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--primary);opacity:0;transition:.3s;}
+  .nav-item.active .nav-dot{opacity:1;bottom:-9px;}
+
+  @media (min-width: 768px) {
+    .bottom-nav { display: none; }
+    body { padding-bottom: 40px; }
+  }
+
+  .no-results{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--ink-muted);}
+  .no-results i{font-size:52px;color:var(--line);margin-bottom:18px;}
+  .no-results h3{font-family:var(--font-display);font-size:20px;margin-bottom:8px;color:var(--ink);}
+
+  #toast{
+    position:fixed;bottom:110px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 20px;
+    box-shadow:0 20px 40px rgba(25,25,25,0.15);font-family:var(--font-mono);font-size:13px;
+    display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:.4s cubic-bezier(.2,.8,.2,1);
+    z-index:2000;max-width:90%;
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto;}
+  #toast i{color:var(--mint);font-size:18px;}
+
+  /* ---------- Modal Overlay ---------- */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(25, 25, 25, 0.4); backdrop-filter: blur(6px); z-index: 3000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px; }
+  .modal-overlay.show { opacity: 1; pointer-events: auto; }
+  
+  .modal-content { background: var(--surface); border-radius: 28px; width: 100%; max-width: 420px; padding: 32px; border: 1px solid var(--line); box-shadow: 0 40px 80px -20px rgba(0,0,0,0.3); position: relative; transform: translateY(40px) scale(0.95); opacity: 0; transition: all 0.4s cubic-bezier(.22,.9,.28,1); }
+  .modal-overlay.show .modal-content { transform: translateY(0) scale(1); opacity: 1; }
+  
+  .modal-close { position: absolute; top: 20px; right: 20px; background: var(--bg); border: 1px solid var(--line); width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); transition: 0.2s; }
+  .modal-close:hover { background: var(--ink); color: white; transform: rotate(90deg); }
+  
+  .modal-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1.5px dashed var(--line); }
+  .modal-avatar { width: 70px; height: 70px; border-radius: 20px; background-size: cover; background-position: center; position: relative; box-shadow: 0 8px 20px rgba(25,25,25,0.1); }
+  .verified-badge { position: absolute; bottom: -8px; right: -8px; background: var(--mint); color: white; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 3px solid var(--surface); box-shadow: 0 4px 10px rgba(14,159,95,0.3); }
+  
+  .modal-title h3 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  
+  .modal-section-title { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--ink-muted); letter-spacing: 1.2px; margin-bottom: 16px; }
+  
+  .stat-bar-group { margin-bottom: 28px; }
+  .stat-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px; margin-top: 14px; }
+  .stat-label b { font-family: var(--font-mono); color: var(--ink); }
+  .stat-track { height: 8px; background: var(--line); border-radius: 10px; overflow: hidden; }
+  .stat-fill { height: 100%; border-radius: 10px; transform-origin: left; transform: scaleX(0); transition: transform 0.8s cubic-bezier(.22,.9,.28,1) 0.2s; }
+  .modal-overlay.show .stat-fill { transform: scaleX(1); }
+  
+  .trust-box { background: rgba(14, 159, 95, 0.08); border: 1px solid rgba(14, 159, 95, 0.2); padding: 18px; border-radius: 16px; display: flex; gap: 14px; align-items: flex-start; }
+  .trust-box i { color: var(--mint); font-size: 20px; margin-top: 2px; }
+  .trust-box h4 { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .trust-box p { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Home</a>
+  <div class="header-title">Matchmaking Feed</div>
+  <div style="width:24px;"></div>
+</div>
+
+<div class="container">
+  <div class="search-container">
+    <div class="search-bar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="Search niches — Fitness, Tech, Food, Gaming..." onkeyup="filterCreators()">
+    </div>
+  </div>
+
+  <div class="header-section">
+    <h2>Local Creators</h2>
+    <div class="result-count" id="resultCount">LOADING...</div>
+  </div>
+
+  <div class="feed-grid" id="creatorFeed"></div>
+</div>
+
+<div class="bottom-nav">
+  <div class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span><div class="nav-dot"></div></div>
+  <div class="nav-item active"><i class="fa-solid fa-users-viewfinder"></i><span>Discover</span><div class="nav-dot"></div></div>
+  <div class="nav-item"><i class="fa-solid fa-calendar-days"></i><span>Bookings</span><div class="nav-dot"></div></div>
+  <div class="nav-item"><i class="fa-solid fa-wallet"></i><span>SafePay</span><div class="nav-dot"></div></div>
+</div>
+
+<div id="toast"><i class="fa-solid fa-shield-heart"></i><span id="toastMsg"></span></div>
+
+<div class="modal-overlay" id="reportModal" onclick="closeReportCard(event)">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeReportCard(event)"><i class="fa-solid fa-xmark"></i></button>
+    
+    <div class="modal-header">
+      <div class="modal-avatar" id="modalAvatar">
+        <div class="verified-badge"><i class="fa-solid fa-shield-check"></i></div>
+      </div>
+      <div class="modal-title">
+        <h3 id="modalName">Creator Name</h3>
+        <span class="niche-tag" id="modalNiche">Niche</span>
+      </div>
+    </div>
+
+    <div class="modal-section-title">VERIFIED AUDIENCE LOCATIONS</div>
+    
+    <div class="stat-bar-group">
+      <div class="stat-label"><span>Sindhu Bhavan Road</span> <b>42%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 42%; background: var(--primary);"></div></div>
+      
+      <div class="stat-label"><span>Prahlad Nagar</span> <b>31%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 31%; background: var(--marigold);"></div></div>
+      
+      <div class="stat-label"><span>Vastrapur</span> <b>18%</b></div>
+      <div class="stat-track"><div class="stat-fill" style="width: 18%; background: var(--mint);"></div></div>
+    </div>
+
+    <div class="trust-box">
+      <i class="fa-solid fa-fingerprint"></i>
+      <div>
+        <h4>TrendTrade Authenticated</h4>
+        <p>Followers and engagement metrics are verified directly via API. Zero bot activity detected.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const maleNames = ["Aarav","Rahul","Karan","Rohan","Vikram","Arjun","Dev","Kabir","Jay"];
+  const femaleNames = ["Priya","Aisha","Neha","Sneha","Aditi","Kiara","Meera","Zara","Ananya"];
+  const lastNames = ["Sharma","Patel","Singh","Gupta","Deshmukh","Joshi","Kapoor","Verma","Reddy","Mehta","Bose","Chopra"];
+  const niches = ["Food & Lifestyle","Fitness & Gym","Tech Reviewer","Beauty & Makeup","Travel Vlogger","Gaming Creator","Men's Fashion","Finance & Crypto"];
+
+  const feedContainer = document.getElementById('creatorFeed');
+  const totalProfiles = 120;
+
+  function generateProfiles(){
+    let html = '';
+    for(let i=0;i<totalProfiles;i++){
+      const isMale = Math.random() < 0.5;
+      const fName = isMale
+        ? maleNames[Math.floor(Math.random()*maleNames.length)]
+        : femaleNames[Math.floor(Math.random()*femaleNames.length)];
+      const lName = lastNames[Math.floor(Math.random()*lastNames.length)];
+      const niche = niches[Math.floor(Math.random()*niches.length)];
+      const views = (Math.random()*40+5).toFixed(1);
+      const reach = Math.floor(Math.random()*20+80);
+      const engagement = (Math.random()*8+4).toFixed(1);
+      const portraitId = Math.floor(Math.random()*99);
+      const avatarUrl = `https://randomuser.me/api/portraits/${isMale ? 'men' : 'women'}/${portraitId}.jpg`;
+      const price = Math.floor(views*150).toLocaleString();
+      const delay = (i<24) ? i*0.045 : 0;
+
+      html += `
+      <div class="creator-card" data-niche="${niche.toLowerCase()}" style="animation-delay:${delay}s" onclick="openReportCard('${fName} ${lName}', '${avatarUrl}', '${niche}')">
+        <div class="card-glare"></div>
+        <div class="profile-header">
+          <div class="avatar" style="background-image:url('${avatarUrl}');">
+            <div class="verified-tick"><i class="fa-solid fa-check"></i></div>
+          </div>
+          <div class="profile-info">
+            <h3>${fName} ${lName}</h3>
+            <div class="niche-tag">${niche}</div>
+          </div>
+        </div>
+        <div class="receipt-lines">
+          <div class="row"><span>Avg Views..........</span><b>${views}K</b></div>
+          <div class="row"><span>Local Reach........</span><b class="hl">${reach}%</b></div>
+          <div class="row"><span>Engagement.........</span><b>${engagement}%</b></div>
+        </div>
+        <button class="hire-btn" onclick="event.stopPropagation(); triggerHire('${fName} ${lName}', '${price}')">
+          <i class="fa-solid fa-lock"></i> Hire via SafePay &nbsp;<span class="price">&#8377;${price}</span>
+        </button>
+      </div>`;
+    }
+    feedContainer.innerHTML = html;
+    updateResultCount(totalProfiles);
+    attachTilt();
+  }
+  generateProfiles();
+
+  function attachTilt(){
+    if(!window.matchMedia("(pointer: fine)").matches) return; // Disable hover effects on touch devices
+    document.querySelectorAll('.creator-card').forEach(card=>{
+      const glare = card.querySelector('.card-glare');
+      card.addEventListener('mousemove', e=>{
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width;
+        const y = (e.clientY - r.top) / r.height;
+        const rx = (0.5 - y) * 8;
+        const ry = (x - 0.5) * 8;
+        card.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-6px) scale(1.01)`;
+        if(glare) glare.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.55), transparent 55%)`;
+      });
+      card.addEventListener('mouseleave', ()=>{
+        card.style.transform = '';
+        if(glare) glare.style.background = 'none';
+      });
+    });
+  }
+
+  function filterCreators(){
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.creator-card');
+    let visible = 0;
+    cards.forEach(card=>{
+      const niche = card.getAttribute('data-niche');
+      const name = card.querySelector('h3').innerText.toLowerCase();
+      const matches = niche.includes(input) || name.includes(input);
+      if(matches){
+        card.style.display='flex';
+        card.style.transition = 'opacity .25s ease, transform .25s ease';
+        requestAnimationFrame(()=>{ card.style.opacity='1'; card.style.transform='scale(1)'; });
+        visible++;
+      } else {
+        card.style.transition = 'opacity .2s ease, transform .2s ease';
+        card.style.opacity='0';
+        card.style.transform='scale(0.9)';
+        setTimeout(()=>{ if(card.style.opacity==='0') card.style.display='none'; }, 200);
+      }
+    });
+    if(visible===0){
+      setTimeout(()=>{
+        feedContainer.innerHTML = `<div class="no-results"><i class="fa-solid fa-ghost"></i><h3>No creators found</h3><p>Try a different niche like "Gaming" or "Fashion"</p></div>`;
+      }, 210);
+    } else if(document.querySelector('.no-results')){
+      generateProfiles();
+      filterCreators();
+    }
+    updateResultCount(visible);
+  }
+
+  function updateResultCount(count){
+    document.getElementById('resultCount').innerText = `${count} PROFILES ACTIVE`;
+  }
+
+  let toastTimer;
+  function triggerHire(name, price){
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').innerHTML = `<b>SafePay escrow opened</b> for ${name} &middot; &#8377;${price} secured`;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'), 3200);
+  }
+
+  // Modal Logic
+  function openReportCard(name, avatarUrl, niche) {
+    document.getElementById('modalName').innerText = name;
+    document.getElementById('modalNiche').innerText = niche;
+    document.getElementById('modalAvatar').style.backgroundImage = `url('${avatarUrl}')`;
+    document.getElementById('reportModal').classList.add('show');
+  }
+
+  function closeReportCard(e) {
+    if(e.target.id === 'reportModal' || e.target.closest('.modal-close')) {
+      document.getElementById('reportModal').classList.remove('show');
+    }
+  }
+</script>
+</body>
+</html>
