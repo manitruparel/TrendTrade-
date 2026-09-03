@@ -16,7 +16,7 @@
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   
   html { background: var(--bg); }
-  body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 100px; overflow-x: hidden; position: relative; }
+  body { background: transparent; color: var(--ink); font-family: var(--font-body); padding-bottom: 40px; overflow-x: hidden; position: relative; }
   a{color:inherit; text-decoration:none;}
 
   .app-header{
@@ -170,6 +170,9 @@
   .trust-box i { color: var(--mint); font-size: 20px; margin-top: 2px; }
   .trust-box h4 { font-size: 13.5px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .trust-box p { font-size: 12px; color: var(--ink-muted); line-height: 1.5; }
+
+  /* Project Footer */
+  .project-footer { text-align:center; padding: 40px 20px; color: var(--ink-muted); font-family: var(--font-mono); font-size: 12px; margin-bottom: 60px; }
 </style>
 </head>
 <body>
@@ -200,6 +203,8 @@
   <div class="feed-grid" id="creatorFeed"></div>
 </div>
 
+<div class="project-footer">Made with ❤️ by Manit</div>
+
 <div class="bottom-nav">
   <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
   <a href="shop.html" class="nav-item active"><i class="fa-solid fa-users-viewfinder"></i><span>Discover</span><div class="nav-dot"></div></a>
@@ -212,7 +217,6 @@
 <div class="modal-overlay" id="reportModal" onclick="closeReportCard(event)">
   <div class="modal-content">
     <button class="modal-close" onclick="closeReportCard(event)"><i class="fa-solid fa-xmark"></i></button>
-    
     <div class="modal-header">
       <div class="modal-avatar" id="modalAvatar">
         <div class="verified-badge"><i class="fa-solid fa-shield-check"></i></div>
@@ -222,20 +226,15 @@
         <span class="niche-tag" id="modalNiche">Niche</span>
       </div>
     </div>
-
     <div class="modal-section-title">VERIFIED AUDIENCE LOCATIONS</div>
-    
     <div class="stat-bar-group">
       <div class="stat-label"><span>Sindhu Bhavan Road</span> <b>42%</b></div>
       <div class="stat-track"><div class="stat-fill" style="width: 42%; background: var(--primary);"></div></div>
-      
       <div class="stat-label"><span>Prahlad Nagar</span> <b>31%</b></div>
       <div class="stat-track"><div class="stat-fill" style="width: 31%; background: var(--marigold);"></div></div>
-      
       <div class="stat-label"><span>Vastrapur</span> <b>18%</b></div>
       <div class="stat-track"><div class="stat-fill" style="width: 18%; background: var(--mint);"></div></div>
     </div>
-
     <div class="trust-box">
       <i class="fa-solid fa-fingerprint"></i>
       <div>
@@ -247,20 +246,20 @@
 </div>
 
 <script>
-  // Hand-curated realistic profiles with authentic images representing Indian creators
+  // 100% Reliable Indian Portraits API
   const curatedCreators = [
-    { name: "Krina Shah", niche: "Ahmedabad Foodie", img: "https://images.unsplash.com/photo-1615243881472-88f572798e09?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 34.2, reach: 89, eng: 6.8 },
-    { name: "Devansh Patel", niche: "Tech & Gadgets", img: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 42.1, reach: 76, eng: 5.2 },
-    { name: "Aashna Desai", niche: "Navratri Fashion", img: "https://images.unsplash.com/photo-1617260840582-772921a97d91?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 22.4, reach: 92, eng: 8.1 },
-    { name: "Karan Chudasama", niche: "SG Highway Gyms", img: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 18.9, reach: 84, eng: 7.4 },
-    { name: "Riya Mehta", niche: "Cafe Reviewer", img: "https://images.unsplash.com/photo-1582266255765-fa5cf1a1d501?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 29.5, reach: 88, eng: 6.1 },
-    { name: "Meet Trivedi", niche: "Local Events", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 15.2, reach: 95, eng: 9.3 },
-    { name: "Pooja Rajput", niche: "Lifestyle & Beauty", img: "https://images.unsplash.com/photo-1588731247530-4076bfc54e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 51.3, reach: 72, eng: 4.8 },
-    { name: "Harsh Panchal", niche: "Gujarati Vlogger", img: "https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 64.8, reach: 81, eng: 5.9 },
-    { name: "Nidhi Joshi", niche: "Aesthetics & Decor", img: "https://images.unsplash.com/photo-1615243881515-f5db622dd81f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 12.5, reach: 91, eng: 7.8 },
-    { name: "Parth Thakkar", niche: "Street Food Blogger", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 88.2, reach: 94, eng: 8.5 },
-    { name: "Shivani Shah", niche: "Luxury Lifestyle", img: "https://images.unsplash.com/photo-1605993439219-9d09d20b1fcb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 27.6, reach: 68, eng: 4.2 },
-    { name: "Yash Desai", niche: "Fitness & Wellness", img: "https://images.unsplash.com/photo-1616428784116-f2d4e7efcd3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80", views: 31.0, reach: 85, eng: 6.4 }
+    { name: "Krina Shah", niche: "Ahmedabad Foodie", img: "https://randomuser.me/api/portraits/women/44.jpg", views: 34.2, reach: 89, eng: 6.8 },
+    { name: "Devansh Patel", niche: "Tech & Gadgets", img: "https://randomuser.me/api/portraits/men/43.jpg", views: 42.1, reach: 76, eng: 5.2 },
+    { name: "Aashna Desai", niche: "Navratri Fashion", img: "https://randomuser.me/api/portraits/women/31.jpg", views: 22.4, reach: 92, eng: 8.1 },
+    { name: "Karan Chudasama", niche: "SG Highway Gyms", img: "https://randomuser.me/api/portraits/men/71.jpg", views: 18.9, reach: 84, eng: 7.4 },
+    { name: "Riya Mehta", niche: "Cafe Reviewer", img: "https://randomuser.me/api/portraits/women/45.jpg", views: 29.5, reach: 88, eng: 6.1 },
+    { name: "Meet Trivedi", niche: "Local Events", img: "https://randomuser.me/api/portraits/men/57.jpg", views: 15.2, reach: 95, eng: 9.3 },
+    { name: "Pooja Rajput", niche: "Lifestyle & Beauty", img: "https://randomuser.me/api/portraits/women/59.jpg", views: 51.3, reach: 72, eng: 4.8 },
+    { name: "Harsh Panchal", niche: "Gujarati Vlogger", img: "https://randomuser.me/api/portraits/men/11.jpg", views: 64.8, reach: 81, eng: 5.9 },
+    { name: "Nidhi Joshi", niche: "Aesthetics & Decor", img: "https://randomuser.me/api/portraits/women/79.jpg", views: 12.5, reach: 91, eng: 7.8 },
+    { name: "Parth Thakkar", niche: "Street Food Blogger", img: "https://randomuser.me/api/portraits/men/73.jpg", views: 88.2, reach: 94, eng: 8.5 },
+    { name: "Shivani Shah", niche: "Luxury Lifestyle", img: "https://randomuser.me/api/portraits/women/89.jpg", views: 27.6, reach: 68, eng: 4.2 },
+    { name: "Yash Desai", niche: "Fitness & Wellness", img: "https://randomuser.me/api/portraits/men/41.jpg", views: 31.0, reach: 85, eng: 6.4 }
   ];
 
   const feedContainer = document.getElementById('creatorFeed');
@@ -345,7 +344,7 @@
     });
     if(visible===0){
       setTimeout(()=>{
-        feedContainer.innerHTML = `<div class="no-results"><i class="fa-solid fa-ghost"></i><h3>No creators found</h3><p>Try a different niche like "Fashion" or "Foodie"</p></div>`;
+        feedContainer.innerHTML = `<div class="no-results"><i class="fa-solid fa-ghost"></i><h3>No creators found</h3></div>`;
       }, 210);
     } else if(document.querySelector('.no-results')){
       renderProfiles();
@@ -359,7 +358,7 @@
     const toast = document.getElementById('toast');
     document.getElementById('toastIcon').className = "fa-solid fa-shield-heart";
     document.getElementById('toastIcon').style.color = "var(--mint)";
-    document.getElementById('toastMsg').innerHTML = `<b>SafePay escrow opened</b> for ${name} &middot; &#8377;${price} secured`;
+    document.getElementById('toastMsg').innerHTML = `<b>SafePay escrow opened</b> for ${name}`;
     showToast(toast);
   }
 
